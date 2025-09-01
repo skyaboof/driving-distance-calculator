@@ -1,7 +1,6 @@
-name: Driving Distance Calculator
+name: 'Driving Distance Calculator'
 type: module
-description: Adds Google Places Autocomplete and calculates driving distance & cost in Webforms and a custom form.
-core_version_requirement: ^10 || ^11
+description: 'Calculate driving distance between two addresses using an external routing API.'
 package: Custom
-dependencies:
-  - webform:webform
+core_version_requirement: ^10
+configure: driving_distance_calculator.settings
