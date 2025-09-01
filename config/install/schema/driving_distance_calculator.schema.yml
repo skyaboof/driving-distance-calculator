@@ -5,6 +5,24 @@ driving_distance_calculator.settings:
     google_api_key:
       type: string
       label: 'Google Maps API Key'
+    pricing_mode:
+      type: string
+      label: 'Pricing mode'
+    base_price:
+      type: float
+      label: 'Base price'
+    rate_per_km:
+      type: float
+      label: 'Rate per km'
+    rate_per_min:
+      type: float
+      label: 'Rate per minute'
+    rate_per_kg:
+      type: float
+      label: 'Rate per kg'
+    fragile_surcharge:
+      type: float
+      label: 'Fragile surcharge'
     tiers:
       type: sequence
       label: 'Pricing tiers'
@@ -17,3 +35,12 @@ driving_distance_calculator.settings:
           price:
             type: float
             label: 'Price per km'
+    allow_client_fallback:
+      type: boolean
+      label: 'Allow client fallback'
+    distance_lookup_retries:
+      type: integer
+      label: 'Distance lookup retries'
+    cache_ttl_minutes:
+      type: integer
+      label: 'Cache TTL (minutes)'
