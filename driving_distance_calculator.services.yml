@@ -1,0 +1,5 @@
+services:
+  driving_distance_calculator.price_calculator:
+    class: Drupal\driving_distance_calculator\Service\PriceCalculator
+    arguments: ['@config.factory']
+    public: true

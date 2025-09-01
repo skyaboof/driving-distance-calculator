@@ -1,0 +1,6 @@
+driving_distance_calculator.settings:
+  title: 'Driving Distance Calculator'
+  description: 'Configure Google API key and pricing settings.'
+  parent: system.admin_config_services
+  route_name: driving_distance_calculator.settings_form
+  weight: 100
