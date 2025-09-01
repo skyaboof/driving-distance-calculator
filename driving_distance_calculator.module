@@ -1,58 +1,20 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
+/**
+ * @file
+ * Driving Distance Calculator module.
+ *
+ * Keep this file minimal. Prefer services and object-oriented code.
+ */
 
 /**
- * Implements hook_form_alter().
- *
- * Attach UX libraries and drupalSettings; keep server-side values authoritative.
+ * Implements hook_help().
  */
-function driving_distance_calculator_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  // Only run on webform submissions (webform_submission_FORMID).
-  $is_webform = is_string($form_id) && strpos($form_id, 'webform_submission_') === 0;
-
-  if ($is_webform) {
-    $has_origin = isset($form['elements']['origin_address']) || isset($form['origin_address']);
-    $has_destination = isset($form['elements']['destination_address']) || isset($form['destination_address']);
-    $has_cost = isset($form['elements']['calculated_cost']) || isset($form['calculated_cost']);
-    $has_distance = isset($form['elements']['calculated_distance']) || isset($form['calculated_distance']);
-
-    if ($has_origin && $has_destination && $has_cost) {
-      // Attach libraries. Library keys should match driving_distance_calculator.libraries.yml.
-      $form['#attached']['library'][] = 'driving_distance_calculator/distance_calculator';
-      $form['#attached']['library'][] = 'driving_distance_calculator/driving_distance_calculator_css';
-
-      $config = \Drupal::config('driving_distance_calculator.settings');
-      $form['#attached']['drupalSettings']['driving_distance_calculator'] = [
-        'googleApiKey' => (string) $config->get('google_api_key') ?: '',
-        'pricingMode' => (string) $config->get('pricing_mode') ?: 'flat',
-        'basePrice' => (float) $config->get('base_price'),
-        'ratePerKm' => (float) $config->get('rate_per_km'),
-        'ratePerMin' => (float) $config->get('rate_per_min'),
-        'ratePerKg' => (float) $config->get('rate_per_kg'),
-        'fragileSurcharge' => (float) $config->get('fragile_surcharge'),
-        'tiers' => $config->get('tiers') ?: [],
-      ];
-
-      // Make server-calculated fields read-only to reduce tampering risk.
-      foreach (['calculated_cost', 'calculated_distance'] as $name) {
-        if (isset($form['elements'][$name])) {
-          $form['elements'][$name]['#attributes']['readonly'] = 'readonly';
-        }
-        if (isset($form[$name])) {
-          $form[$name]['#attributes']['readonly'] = 'readonly';
-        }
-      }
-
-      if (!empty($form['origin_address'])) {
-        $form['origin_address']['#suffix'] = '<div id="distance-summary-origin" class="form-description"></div>';
-      }
-      if (!empty($form['destination_address'])) {
-        $form['destination_address']['#suffix'] = '<div id="distance-summary-destination" class="form-description"></div>';
-      }
-      if (!empty($form['calculated_cost'])) {
-        $form['calculated_cost']['#suffix'] = '<div id="cost-summary"></div>';
-      }
-    }
+function driving_distance_calculator_help($route_name, $route_match) {
+  switch ($route_name) {
+    case 'help.page.driving_distance_calculator':
+      return t('Provides driving distance calculations using an external routing service. Configure at @settings.', [
+        '@settings' => \Drupal\Core\Url::fromRoute('driving_distance_calculator.settings')->toString(),
+      ]);
   }
 }

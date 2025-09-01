@@ -1,9 +1,3 @@
-access driving distance calculator:
-  title: 'Access Driving Distance Calculator'
-  description: 'Access the Driving Distance Calculator form and calculate endpoint.'
-  restrict: FALSE
-
-administer driving distance calculator:
-  title: 'Administer Driving Distance Calculator'
-  description: 'Manage settings and clear caches for the Driving Distance Calculator module.'
-  restrict: TRUE
+administer driving distance:
+  title: 'Administer driving distance calculator'
+  description: 'Manage settings for the driving distance calculator module.'
