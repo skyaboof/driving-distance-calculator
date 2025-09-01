@@ -1,3 +1,9 @@
 access driving distance calculator:
   title: 'Access Driving Distance Calculator'
-  description: 'Allows users to view the price calculator form and use the JSON API endpoint.'
+  description: 'Access the Driving Distance Calculator form and calculate endpoint.'
+  restrict: FALSE
+
+administer driving distance calculator:
+  title: 'Administer Driving Distance Calculator'
+  description: 'Manage settings and clear caches for the Driving Distance Calculator module.'
+  restrict: TRUE
