@@ -8,7 +8,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Attach UX libraries and drupalSettings; keep server-side values authoritative.
  */
 function driving_distance_calculator_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  $is_webform = strpos($form_id, 'webform_submission_') === 0;
+  // Only run on webform submissions (webform_submission_FORMID).
+  $is_webform = is_string($form_id) && strpos($form_id, 'webform_submission_') === 0;
 
   if ($is_webform) {
     $has_origin = isset($form['elements']['origin_address']) || isset($form['origin_address']);
@@ -17,6 +18,7 @@ function driving_distance_calculator_form_alter(array &$form, FormStateInterface
     $has_distance = isset($form['elements']['calculated_distance']) || isset($form['calculated_distance']);
 
     if ($has_origin && $has_destination && $has_cost) {
+      // Attach libraries. Library keys should match driving_distance_calculator.libraries.yml.
       $form['#attached']['library'][] = 'driving_distance_calculator/distance_calculator';
       $form['#attached']['library'][] = 'driving_distance_calculator/driving_distance_calculator_css';
 
