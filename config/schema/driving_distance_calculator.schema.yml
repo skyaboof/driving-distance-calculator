@@ -1,0 +1,40 @@
+driving_distance_calculator.settings:
+  type: config_object
+  label: 'Driving Distance Calculator settings'
+  mapping:
+    google_api_key:
+      type: string
+      label: 'Google API key'
+    base_price:
+      type: float
+      label: 'Base Price'
+    pricing_mode:
+      type: string
+      label: 'Pricing mode'
+    tiers:
+      type: sequence
+      label: 'Pricing tiers'
+      sequence:
+        type: mapping
+        mapping:
+          max:
+            type: float
+            label: 'Max distance'
+          price:
+            type: float
+            label: 'Price per km'
+    per_minute_rate:
+      type: float
+      label: 'Rate per minute'
+    hybrid_distance_rate:
+      type: float
+      label: 'Hybrid: Distance rate'
+    hybrid_time_rate:
+      type: float
+      label: 'Hybrid: Time rate'
+    fragile_multiplier:
+      type: float
+      label: 'Fragile surcharge multiplier'
+    weight_rate:
+      type: float
+      label: 'Per-kg weight rate'

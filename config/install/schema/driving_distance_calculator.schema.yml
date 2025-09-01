@@ -1,0 +1,19 @@
+driving_distance_calculator.settings:
+  type: config_object
+  label: 'Driving Distance Calculator settings'
+  mapping:
+    google_api_key:
+      type: string
+      label: 'Google Maps API Key'
+    tiers:
+      type: sequence
+      label: 'Pricing tiers'
+      sequence:
+        type: mapping
+        mapping:
+          max:
+            type: float
+            label: 'Maximum distance (km)'
+          price:
+            type: float
+            label: 'Price per km'
