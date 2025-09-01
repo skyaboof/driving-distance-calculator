@@ -2,4 +2,8 @@ services:
   driving_distance_calculator.price_calculator:
     class: Drupal\driving_distance_calculator\Service\PriceCalculator
     arguments: ['@config.factory']
-    public: true
+    autowire: true
+    public: false
+
+  Drupal\driving_distance_calculator\Service\PriceCalculatorInterface:
+    alias: 'driving_distance_calculator.price_calculator'
