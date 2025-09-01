@@ -20,7 +20,7 @@ driving_distance_calculator.settings_form:
     _form: '\Drupal\driving_distance_calculator\Form\DrivingDistanceCalculatorSettingsForm'
     _title: 'Driving Distance Calculator settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer driving distance calculator'
 
 driving_distance_calculator.settings_form_alias:
   path: '/admin/config/services/driving-distance'
@@ -28,7 +28,7 @@ driving_distance_calculator.settings_form_alias:
     _form: '\Drupal\driving_distance_calculator\Form\DrivingDistanceCalculatorSettingsForm'
     _title: 'Driving Distance Calculator settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer driving distance calculator'
 
 driving_distance_calculator.clear_cache:
   path: '/admin/config/services/driving-distance-calculator/clear-cache'
@@ -36,4 +36,4 @@ driving_distance_calculator.clear_cache:
     _controller: '\Drupal\driving_distance_calculator\Controller\CacheController::clearAll'
     _title: 'Clear Driving Distance Cache'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer driving distance calculator'
