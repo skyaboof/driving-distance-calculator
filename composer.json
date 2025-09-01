@@ -1,5 +1,5 @@
 {
-  "name": "custom/driving_distance_calculator",
+  "name": "drupal/driving_distance_calculator",
   "description": "Adds Google Places Autocomplete and calculates driving distance & cost in Webforms and a custom form.",
   "type": "drupal-module",
   "license": "GPL-2.0-or-later",
