@@ -3,23 +3,32 @@
 namespace Drupal\driving_distance_calculator\Service;
 
 /**
- * Interface for price calculation services.
+ * Interface for the driving distance price calculator.
  */
 interface PriceCalculatorInterface {
+
   /**
-   * Calculate price based on distance, time and optional conditions.
+   * Calculate price.
    *
-   * @param float $distance
-   *   Distance in km.
-   * @param float $minutes
-   *   Time in minutes.
-   * @param array $conditions
-   *   Additional conditions (weight, fragile, pricing settings).
+   * @param float $distance_km
+   *   Driving distance in kilometers.
+   * @param float $duration_minutes
+   *   Driving duration in minutes (optional).
+   * @param float $weight_kg
+   *   Shipment weight in kilograms (optional).
+   * @param bool $fragile
+   *   Whether the shipment is fragile (optional).
+   * @param array $options
+   *   Optional extra data:
+   *     - 'priority' => bool
+   *     - 'requested_delivery_timestamp' => int (unix timestamp)
    *
    * @return array
-   *   An array with either:
-   *   - ['status' => 'success', 'total_price' => float, 'surcharge' => float, 'conditions' => array]
-   *   - ['status' => 'error', 'errors' => array]
+   *   [
+   *     'cost' => (float) total_price,
+   *     'breakdown' => (array) detailed breakdown for display/logging,
+   *   ]
    */
-  public function calculate(float $distance, float $minutes, array $conditions = []): array;
+  public function calculate(float $distance_km, float $duration_minutes = 0.0, float $weight_kg = 0.0, bool $fragile = FALSE, array $options = []) : array;
+
 }
