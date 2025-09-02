@@ -1,13 +1,7 @@
-distance_calculator:
+price_calc:
   version: 1.x
   js:
-    js/driving_distance_calculator.js: {}
+    js/price-calc.js: {}
   dependencies:
     - core/drupal
-    - core/once
-
-driving_distance_calculator_css:
-  version: 1.x
-  css:
-    theme:
-      css/driving_distance_calculator.css: {}
+    - core/jquery
