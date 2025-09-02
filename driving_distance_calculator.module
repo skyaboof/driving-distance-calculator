@@ -1,10 +1,11 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
 /**
  * @file
- * Driving Distance Calculator module.
- *
- * Keep this file minimal. Prefer services and object-oriented code.
+ * Driving Distance Calculator module bootstrap.
  */
 
 /**
@@ -13,8 +14,43 @@
 function driving_distance_calculator_help($route_name, $route_match) {
   switch ($route_name) {
     case 'help.page.driving_distance_calculator':
-      return t('Provides driving distance calculations using an external routing service. Configure at @settings.', [
-        '@settings' => \Drupal\Core\Url::fromRoute('driving_distance_calculator.settings')->toString(),
+      return t('Provides driving distance and pricing calculations. Configure at @settings.', [
+        '@settings' => Url::fromRoute('driving_distance_calculator.settings')->toString(),
       ]);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Attach the price_calc library to the moving_quote webform. This implementation
+ * is more robust: it handles different webform form IDs and attaches the
+ * library when the webform machine name matches 'moving_quote'.
+ */
+function driving_distance_calculator_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Resolve the webform machine name if available.
+  $webform_id = NULL;
+
+  if (!empty($form['#webform']) && is_object($form['#webform']) && method_exists($form['#webform'], 'id')) {
+    $webform_id = $form['#webform']->id();
+  }
+
+  // Some webform client form IDs follow the pattern: webform_client_form_<webform_id> or webform_client_form_<webform_id>_add_form
+  if (empty($webform_id) && preg_match('/^webform_client_form_([a-z0-9_\-]+)(?:_.*)?$/', $form_id, $matches)) {
+    $webform_id = $matches[1];
+  }
+
+  // Older/different patterns: webform_submission_<webform_id>_add_form
+  if (empty($webform_id) && preg_match('/^webform_submission_([a-z0-9_\-]+)_.*$/', $form_id, $matches)) {
+    $webform_id = $matches[1];
+  }
+
+  // Only attach to the moving_quote webform. Adjust the string if your webform has a different machine name.
+  if ($webform_id === 'moving_quote') {
+    // Attach JS library.
+    $form['#attached']['library'][] = 'driving_distance_calculator/price_calc';
+
+    // Provide endpoint via drupalSettings (absolute URL to avoid relative path issues).
+    $form['#attached']['drupalSettings']['drivingDistanceCalculator']['priceEndpoint'] = Url::fromRoute('driving_distance_calculator.price_calc', [], ['absolute' => TRUE])->toString();
   }
 }
