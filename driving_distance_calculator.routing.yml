@@ -1,4 +1,4 @@
-driving_distance_calculator.form:
+driving_distance_calculator.moving_quote:
   path: '/moving-quote'
   defaults:
     _form: '\Drupal\driving_distance_calculator\Form\MovingQuoteForm'

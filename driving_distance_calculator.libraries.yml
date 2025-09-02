@@ -1,5 +1,5 @@
 price_calc:
-  version: 1.x
+  version: 1.0
   js:
     js/price-calc.js: {}
   dependencies:

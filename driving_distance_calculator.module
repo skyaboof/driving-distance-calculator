@@ -1,31 +1,19 @@
 <?php
 
-use Drupal\webform\Entity\WebformSubmission;
+/**
+ * @file
+ * Module bootstrap for driving_distance_calculator.
+ *
+ * This module no longer depends on Webform. The standalone MovingQuoteForm
+ * implements the behavior originally provided by the webform export.
+ */
 
 /**
- * Implements hook_form_alter(). Attach the price-calc library and endpoint to webforms.
+ * Implements hook_help() - optional.
  */
-function driving_distance_calculator_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if (!empty($form['#webform'])) {
-    // Attach our library so webforms get the price-calc behavior.
-    $form['#attached']['library'][] = 'driving_distance_calculator/price_calc';
-    $form['#attached']['drupalSettings']['drivingDistanceCalculator']['priceEndpoint'] = \Drupal::url('driving_distance_calculator.price_calc_endpoint');
+function driving_distance_calculator_help($route_name, \\Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.driving_distance_calculator':
+      return '<p>' . t('Provides a standalone moving quote form, pricing service and price endpoint.') . '</p>';
   }
-}
-
-/**
- * Compute price on webform submission presave so the value is available server-side.
- */
-function driving_distance_calculator_webform_submission_presave(\Drupal\webform\WebformSubmissionInterface $webform_submission) {
-  $data = $webform_submission->getData();
-  $calculator = \Drupal::service('driving_distance_calculator.pricing_calculator');
-  $result = $calculator->compute($data);
-
-  // Store computed total into the hidden final_calculated_quote field if present.
-  $data['final_calculated_quote'] = isset($result['total']) ? $result['total'] : NULL;
-  // Also populate calculated_cost and calculated_distance if those components exist.
-  $data['calculated_cost'] = isset($result['total']) ? '$' . number_format($result['total'], 2) : NULL;
-  $data['calculated_distance'] = isset($result['distance_m']) ? $result['distance_m'] : NULL;
-
-  $webform_submission->setData($data);
 }

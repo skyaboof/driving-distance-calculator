@@ -1,7 +1,5 @@
 name: Driving Distance Calculator
 type: module
-description: 'Provides moving quote form, webform export, price endpoint, and JS for estimating moves.'
+description: 'Provides moving quote form, price endpoint, price calculator service and JS for estimating moves. Standalone (no Webform dependency).'
 core_version_requirement: ^8 || ^9 || ^10
 package: Custom
-dependencies:
-  - webform:webform

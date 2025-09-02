@@ -1,123 +1,54 @@
-(function ($, Drupal, drupalSettings) {
-  'use strict';
-
-  Drupal.behaviors.drivingDistancePriceCalc = {
+(function (Drupal, $) {
+  Drupal.behaviors.priceCalc = {
     attach: function (context, settings) {
-      var endpoint = drupalSettings.drivingDistanceCalculator && drupalSettings.drivingDistanceCalculator.priceEndpoint;
-      if (!endpoint) {
-        return;
-      }
+      var endpoint = settings.drivingDistanceCalculator && settings.drivingDistanceCalculator.priceEndpoint;
+      if (!endpoint) { return; }
 
-      // Find forms explicitly marked by the form build using data attribute.
-      var $forms = $(context).find('form[data-driving-distance-form="1"]').once('driving-distance-price');
-
-      if (!$forms.length) {
-        return;
-      }
-
-      $forms.each(function () {
-        var $form = $(this);
-
-        // Determine relevant field names dynamically by reading inputs you expect.
-        var fieldNames = [
-          'service_type',
-          'move_size_residential',
-          'origin_address',
-          'destination_address'
-        ];
-
-        function collectData() {
-          var payload = {};
-          fieldNames.forEach(function (name) {
-            var $els = $form.find('[name="' + name + '"], [name="' + name + '[]"]');
-            if (!$els.length) {
-              return;
-            }
-            if ($els.length > 1) {
-              var vals = [];
-              $els.each(function () {
-                var $el = $(this);
-                if ($el.is(':checkbox') && $el.is(':checked')) {
-                  vals.push($el.val());
-                } else if (!$el.is(':checkbox')) {
-                  var v = $el.val();
-                  if (v !== undefined && v !== null && v !== '') {
-                    vals.push(v);
-                  }
-                }
-              });
-              payload[name] = vals;
-            } else {
-              var $el = $($els[0]);
-              if ($el.is(':checkbox')) {
-                payload[name] = $el.is(':checked') ? $el.val() : null;
-              } else if ($el.is(':radio')) {
-                var $checked = $form.find('[name="' + $el.attr('name') + '"]:checked');
-                payload[name] = $checked.length ? $checked.val() : null;
-              } else {
-                payload[name] = $el.val();
-              }
-            }
-          });
-          return payload;
-        }
-
-        var pending = null;
-        function postData() {
-          var data = collectData();
-
-          if (pending && pending.abort) {
-            pending.abort();
+      // Trigger recalculation on change for inputs with data-price-calc attr
+      $(context).find('[data-price-calc]').once('priceCalc').on('change', function () {
+        var $form = $(this).closest('form');
+        var data = {};
+        $form.find(':input[name]').each(function () {
+          var $el = $(this);
+          // handle checkboxes and multiple selects simplistically
+          var name = $el.attr('name');
+          if (!$el.val()) {
+            data[name] = '';
+            return;
           }
-
-          pending = $.ajax({
-            url: endpoint,
-            method: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            timeout: 10000
-          });
-
-          pending.done(function (resp) {
-            if (!resp) { return; }
-            if (resp.total !== undefined) {
-              var formatted = (typeof resp.total === 'number') ? ('$' + resp.total.toFixed(2)) : resp.total;
-              var $cost = $form.find('[name="calculated_cost"]');
-              if ($cost.length) {
-                $cost.val(formatted).trigger('input');
-              }
+          // If checkbox group: collect values
+          if ($el.is(':checkbox')) {
+            if (!data[name]) { data[name] = []; }
+            if ($el.is(':checked')) {
+              data[name].push($el.val());
             }
-            if (resp.distance_m !== undefined) {
-              var $dist = $form.find('[name="calculated_distance"]');
-              if ($dist.length) {
-                $dist.val(resp.distance_m).trigger('input');
-              }
-            }
-          }).fail(function (xhr, status) {
-            if (window.console && console.warn) {
-              console.warn('Price calc request failed:', status, xhr);
-            }
-          }).always(function () {
-            pending = null;
-          });
-        }
-
-        // Debounce
-        var debounceTimer = null;
-        function schedulePost() {
-          if (debounceTimer) { clearTimeout(debounceTimer); }
-          debounceTimer = setTimeout(function () { postData(); }, 300);
-        }
-
-        $form.on('change input', 'input, select, textarea', function () {
-          schedulePost();
+          }
+          else {
+            data[name] = $el.val();
+          }
         });
-
-        // initial call
-        schedulePost();
+        $.ajax({
+          url: endpoint,
+          method: 'POST',
+          data: JSON.stringify(data),
+          contentType: 'application/json; charset=utf-8'
+        }).done(function (resp) {
+          if (resp.total !== undefined) {
+            $form.find('input[name="calculated_cost"]').val('$' + resp.total.toFixed(2));
+            $form.find('input[name="calculated_distance"]').val(resp.distance_m);
+            $form.find('input[name="final_calculated_quote"]').val(resp.total);
+            // If you want to visually update a markup element, add it with id and update here.
+            $form.find('.estimated-total-ajax').html(function () {
+              var html = '';
+              if (resp.details && resp.details.length) {
+                resp.details.forEach(function (d) { html += '<p>' + d + '</p>'; });
+              }
+              html += '<p><strong>Total Estimated Cost: $' + resp.total.toFixed(2) + '</strong></p>';
+              return html;
+            });
+          }
+        });
       });
     }
   };
-
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, jQuery);

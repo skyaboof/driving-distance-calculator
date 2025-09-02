@@ -11,7 +11,7 @@ class PriceCalcController extends ControllerBase {
   protected $calculator;
 
   public function __construct() {
-    $this->calculator = \Drupal::service('driving_distance_calculator.pricing_calculator');
+    $this->calculator = \\Drupal::service('driving_distance_calculator.pricing_calculator');
   }
 
   public function calculate(Request $request) {
