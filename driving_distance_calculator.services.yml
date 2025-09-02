@@ -1,4 +1,4 @@
 services:
-  driving_distance_calculator.distance_service:
-    class: Drupal\driving_distance_calculator\Service\DistanceService
-    arguments: ['@http_client', '@config.factory', '@logger.channel.default']
+  driving_distance_calculator.pricing_calculator:
+    class: Drupal\driving_distance_calculator\Service\PricingCalculator
+    public: true

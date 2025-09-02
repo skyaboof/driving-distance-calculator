@@ -1,6 +1,7 @@
-name: 'Driving Distance Calculator'
+name: Driving Distance Calculator
 type: module
-description: 'Calculate driving distance between two addresses using an external routing API.'
+description: 'Provides moving quote form, webform export, price endpoint, and JS for estimating moves.'
+core_version_requirement: ^8 || ^9 || ^10
 package: Custom
-core_version_requirement: ^10
-configure: driving_distance_calculator.settings
+dependencies:
+  - webform:webform
