@@ -1,17 +1,15 @@
-driving_distance_calculator.settings:
-  path: '/admin/config/system/driving-distance'
+driving_distance_calculator.form:
+  path: '/moving-quote'
   defaults:
-    _form: '\Drupal\\driving_distance_calculator\\Form\\SettingsForm'
-    _title: 'Driving distance calculator settings'
-  requirements:
-    _permission: 'administer driving distance'
-
-driving_distance_calculator.calculate:
-  path: '/driving-distance/calculate'
-  defaults:
-    _controller: '\Drupal\\driving_distance_calculator\\Controller\\DistanceController::calculate'
-    _title: 'Calculate driving distance'
+    _form: '\Drupal\driving_distance_calculator\Form\MovingQuoteForm'
+    _title: 'Moving Quote'
   requirements:
     _permission: 'access content'
-  options:
-    _auth: ['basic', 'cookie']
+
+driving_distance_calculator.price_calc_endpoint:
+  path: '/moving-quote/price-calc'
+  defaults:
+    _controller: '\Drupal\driving_distance_calculator\Controller\PriceCalcController::calculate'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
